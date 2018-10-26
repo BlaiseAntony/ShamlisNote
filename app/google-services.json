@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "111659102805",
+    "firebase_url": "https://shamli-s-note-f4f12.firebaseio.com",
+    "project_id": "shamli-s-note-f4f12",
+    "storage_bucket": "shamli-s-note-f4f12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111659102805:android:b3ce3fffe334c9dd",
+        "android_client_info": {
+          "package_name": "com.qburst.blaise.shamlisnote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111659102805-7q1hfhvvmoov2un06faicrq4tj4oqc89.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qburst.blaise.shamlisnote",
+            "certificate_hash": "06dc7af4059cab2aa96101f2cd45537b1f9cbd03"
+          }
+        },
+        {
+          "client_id": "111659102805-bhas9n314i2d60efa3de04r9p0uhf31q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVw8aZ13Mq420f-Q23wr8DdnKbREar6fE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111659102805-bhas9n314i2d60efa3de04r9p0uhf31q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
