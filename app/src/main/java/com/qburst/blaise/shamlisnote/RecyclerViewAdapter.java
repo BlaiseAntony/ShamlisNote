@@ -1,6 +1,9 @@
 package com.qburst.blaise.shamlisnote;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +20,14 @@ import static com.qburst.blaise.shamlisnote.MainActivity.count;
 
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db;
+    private Context act;
+    private String body;
+    private String head;
+    RecyclerViewAdapter(FirebaseFirestore db, MainActivity mainActivity) {
+        this.db = db;
+        this.act = mainActivity;
+    }
 
     @NonNull
     @Override
@@ -34,10 +44,28 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        holder.head.setText(task.getResult().getString("title"));
-                        holder.content.setText(task.getResult().getString("body"));
+                        body = task.getResult().getString("body");
+                        head = task.getResult().getString("title");
+                        holder.head.setText(head);
+                        if (body.length()>101) {
+                            String str = body.substring(0,100)+"...";
+                            holder.content.setText(str);
+                        }
+                        else {
+                            holder.content.setText(body);
+                        }
                     }
                 });
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(act, AddNoteActivity.class);
+                intent.putExtra("count",position);
+                intent.putExtra("head",head);
+                intent.putExtra("body",body);
+                act.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -50,10 +78,12 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
         private TextView head;
         private TextView content;
+        private CardView cardView;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             head = itemView.findViewById(R.id.heading);
             content = itemView.findViewById(R.id.body);
+            cardView = itemView.findViewById(R.id.card);
         }
     }
 }
