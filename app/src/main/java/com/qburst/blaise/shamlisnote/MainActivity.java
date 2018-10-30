@@ -1,8 +1,8 @@
 package com.qburst.blaise.shamlisnote;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,25 +12,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static int count;
-    FirebaseFirestore db;
+    SharedPreferences preferences;
+    MenuItem mynotes;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("count",count).apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fillRecyclerView();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +45,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build();
-        db = FirebaseFirestore.getInstance();
-        db.setFirestoreSettings(settings);
+        preferences = getSharedPreferences("note",MODE_PRIVATE);
+        count = preferences.getInt("count",0);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +58,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
                 toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -65,30 +70,14 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        db.collection("count").document("id").get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        count = Integer.parseInt(task.getResult().getString("count"));
-                        fillRecyclerView();
-                    }
-                });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        DocumentReference data = db.collection("count").document("id");
-        data.update("count", String.valueOf(count));
-    }
-
     private void fillRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(db,this);
+        Database db = new Database(this);
+        List<Note> note = db.getAllNotes();
+        List<Note> notes = note.subList(0,note.size());
+        Collections.reverse(notes);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(notes,this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -108,17 +97,19 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.mynotes) {
+            fillRecyclerView();
+        }
+        else if (id == R.id.messnotes) {
 
-        } else if (id == R.id.nav_slideshow) {
+        }
+        else if (id == R.id.importexport) {
 
-        } else if (id == R.id.nav_manage) {
+        }
+        else if (id == R.id.settings) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        }
+        else if (id == R.id.contactus) {
 
         }
 

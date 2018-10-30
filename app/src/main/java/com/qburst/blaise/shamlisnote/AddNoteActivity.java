@@ -2,23 +2,15 @@ package com.qburst.blaise.shamlisnote;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.qburst.blaise.shamlisnote.MainActivity.count;
 
@@ -26,52 +18,64 @@ public class AddNoteActivity extends AppCompatActivity{
 
     EditText head;
     EditText content;
-    int countPassed;
-    FirebaseFirestore db;
+    int id;
     String body;
     String heading;
+    Database db;
+    MenuItem save;
+    MenuItem edit;
+    MenuItem delete;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_note_activity);
-        db = FirebaseFirestore.getInstance();
         head = findViewById(R.id.heading);
         content = findViewById(R.id.body);
-        Intent intent = getIntent();
-        countPassed = intent.getIntExtra("count",-1);
-        if(countPassed != -1) {
-            heading = intent.getStringExtra("head");
-            body = intent.getStringExtra("body");
-            head.setText(heading);
-            content.setText(body);
-        }
+        db = new Database(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.add_note_toolbar_menu, menu);
+        save = menu.findItem(R.id.save);
+        edit = menu.findItem(R.id.edit);
+        delete = menu.findItem(R.id.delete);
+        Intent intent = getIntent();
+        id = intent.getIntExtra("id",-1);
+        if(id != -1) {
+            Note n = db.getNote(id);
+            if(n != null) {
+                heading = n.getHead();
+                body = n.getBody();
+                head.setText(heading);
+                content.setText(body);
+            }
+            head.setInputType(InputType.TYPE_NULL);
+            content.setInputType(InputType.TYPE_NULL);
+            save.setVisible(false);
+            edit.setVisible(true);
+            delete.setVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
     public void storeData(MenuItem item) {
-        if(head.getText() == null) {
+        if(head.getText().toString().equals("")) {
             Toast.makeText(this, "The Title cannot be empty",
                     Toast.LENGTH_SHORT).show();
         }
         else {
-            Map<String, Object> note = new HashMap<>();
-            note.put("title",head.getText().toString());
-            note.put("body",content.getText().toString());
-            if(countPassed == -1) {
-                db.collection("notes").document(String.valueOf((count++))).set(note);
-                DocumentReference data = db.collection("count").document("id");
-                data.update("count", String.valueOf(count));
+            int c = 0;
+            if(id == -1) {
+                c = count++;
             }
             else {
-                db.collection("notes").document(String.valueOf((countPassed))).set(note);
+                c = id;
             }
+            Note n = new Note(c,head.getText().toString(),content.getText().toString());
+            db.insert(n);
             onBackPressed();
         }
     }
@@ -79,5 +83,18 @@ public class AddNoteActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public void deleteNote(MenuItem item) {
+        db.delete(id);
+        onBackPressed();
+    }
+
+    public void editNote(MenuItem item) {
+        head.setInputType(InputType.TYPE_CLASS_TEXT);
+        content.setInputType(InputType.TYPE_CLASS_TEXT);
+        save.setVisible(true);
+        delete.setVisible(false);
+        edit.setVisible(false);
     }
 }

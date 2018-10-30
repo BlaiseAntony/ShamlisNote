@@ -28,6 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/round_edit_white_18dp" />
+        app:srcCompat="@drawable/round_edit_white_36dp" />
 
 </android.support.design.widget.CoordinatorLayout>
