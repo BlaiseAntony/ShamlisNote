@@ -1,6 +1,6 @@
-package com.qburst.blaise.shamlisnote;
+package com.qburst.blaise.shamlisnote.model;
 
-public class Note {
+public class MyNote {
     public String getBody() {
         return Body;
     }
@@ -13,7 +13,7 @@ public class Note {
     private String Body;
     private int id;
 
-    Note(int id, String Head, String Body) {
+    public MyNote(int id, String Head, String Body) {
         this.id=id;
         this.Head = Head;
         this.Body = Body;

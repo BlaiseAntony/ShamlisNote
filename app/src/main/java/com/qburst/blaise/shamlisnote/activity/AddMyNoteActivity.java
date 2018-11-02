@@ -1,4 +1,4 @@
-package com.qburst.blaise.shamlisnote;
+package com.qburst.blaise.shamlisnote.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,20 +8,23 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import static com.qburst.blaise.shamlisnote.MainActivity.count;
+import com.qburst.blaise.shamlisnote.model.MyNote;
+import com.qburst.blaise.shamlisnote.databasehelper.MyNoteDatabase;
+import com.qburst.blaise.shamlisnote.R;
 
-public class AddNoteActivity extends AppCompatActivity{
+import static com.qburst.blaise.shamlisnote.activity.MainActivity.noteCount;
+
+public class AddMyNoteActivity extends AppCompatActivity{
 
     EditText head;
     EditText content;
     int id;
     String body;
     String heading;
-    Database db;
+    MyNoteDatabase db;
     MenuItem save;
     MenuItem edit;
     MenuItem delete;
@@ -32,7 +35,7 @@ public class AddNoteActivity extends AppCompatActivity{
         setContentView(R.layout.add_note_activity);
         head = findViewById(R.id.heading);
         content = findViewById(R.id.body);
-        db = new Database(this);
+        db = new MyNoteDatabase(this);
     }
 
     @Override
@@ -45,7 +48,7 @@ public class AddNoteActivity extends AppCompatActivity{
         Intent intent = getIntent();
         id = intent.getIntExtra("id",-1);
         if(id != -1) {
-            Note n = db.getNote(id);
+            MyNote n = db.getNote(id);
             if(n != null) {
                 heading = n.getHead();
                 body = n.getBody();
@@ -69,12 +72,12 @@ public class AddNoteActivity extends AppCompatActivity{
         else {
             int c = 0;
             if(id == -1) {
-                c = count++;
+                c = noteCount++;
             }
             else {
                 c = id;
             }
-            Note n = new Note(c,head.getText().toString(),content.getText().toString());
+            MyNote n = new MyNote(c,head.getText().toString(),content.getText().toString());
             db.insert(n);
             onBackPressed();
         }

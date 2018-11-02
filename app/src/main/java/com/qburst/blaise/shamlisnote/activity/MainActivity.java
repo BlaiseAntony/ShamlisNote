@@ -1,4 +1,4 @@
-package com.qburst.blaise.shamlisnote;
+package com.qburst.blaise.shamlisnote.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,34 +9,43 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-import java.util.Collections;
-import java.util.List;
+import com.qburst.blaise.shamlisnote.fragment.BackupFragment;
+import com.qburst.blaise.shamlisnote.fragment.MessFragment;
+import com.qburst.blaise.shamlisnote.fragment.MyNoteFragment;
+import com.qburst.blaise.shamlisnote.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static int count;
+    public static int noteCount;
+    public static int messNoteCount;
     SharedPreferences preferences;
-    MenuItem mynotes;
+    public static int fragment_id;
+    public static final int MY_NOTE = 99;
+    public static final int MESS = 100;
+    private FloatingActionButton fab;
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("count",count).apply();
+        editor.putInt("noteCount", noteCount).apply();
     }
 
     @Override
     protected void onResume() {
+        if(fragment_id == MESS) {
+            displayMessNotes();
+        }
+        else if(fragment_id == MY_NOTE) {
+            displayNotes();
+        }
         super.onResume();
-        fillRecyclerView();
     }
 
     @Override
@@ -45,20 +54,24 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        preferences = getSharedPreferences("note",MODE_PRIVATE);
-        count = preferences.getInt("count",0);
+        preferences = getSharedPreferences("note", MODE_PRIVATE);
+        noteCount = preferences.getInt("noteCount", 0);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,
-                        AddNoteActivity.class);
-                startActivity(intent);
+                if (fragment_id == MY_NOTE) {
+                    Intent intent = new Intent(MainActivity.this,
+                            AddMyNoteActivity.class);
+                    startActivity(intent);
+                } else if (fragment_id == MESS) {
+                    Intent intent = new Intent(MainActivity.this,
+                            AddMessNoteActivity.class);
+                    startActivity(intent);
+                }
             }
         });
-
-
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
@@ -68,17 +81,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
+        displayNotes();
+        navigationView.getMenu().findItem(R.id.mynotes).setChecked(true);
 
-    private void fillRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        Database db = new Database(this);
-        List<Note> note = db.getAllNotes();
-        List<Note> notes = note.subList(0,note.size());
-        Collections.reverse(notes);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(notes,this);
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -91,6 +96,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void findFragment(){
+
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -98,13 +107,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.mynotes) {
-            fillRecyclerView();
+            fab.setVisibility(View.VISIBLE);
+            displayNotes();
         }
         else if (id == R.id.messnotes) {
-
+            fab.setVisibility(View.VISIBLE);
+            displayMessNotes();
         }
         else if (id == R.id.importexport) {
-
+            fab.setVisibility(View.INVISIBLE);
+            importExport();
         }
         else if (id == R.id.settings) {
 
@@ -116,5 +128,28 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void displayNotes() {
+        MyNoteFragment f = new MyNoteFragment();
+          getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
+    }
+
+    private void importExport() {
+        BackupFragment f= new BackupFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
+    }
+
+    private void displayMessNotes() {
+        MessFragment f= new MessFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
+    }
+
+    public void backup(View view) {
+        Toast.makeText(this, "Functionality will be available soon", Toast.LENGTH_SHORT).show();
+    }
+
+    public void restore(View view) {
+        Toast.makeText(this, "Functionality will be available soon", Toast.LENGTH_SHORT).show();
     }
 }

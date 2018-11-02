@@ -1,4 +1,4 @@
-package com.qburst.blaise.shamlisnote;
+package com.qburst.blaise.shamlisnote.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,17 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.qburst.blaise.shamlisnote.model.MyNote;
+import com.qburst.blaise.shamlisnote.R;
+import com.qburst.blaise.shamlisnote.activity.AddMyNoteActivity;
+
 import java.util.List;
 
-class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+class MyNoteRecyclerViewAdapter extends RecyclerView.Adapter<MyNoteRecyclerViewAdapter.ViewHolder> {
 
-    private Context act;
-    private List<Note> notes;
-    private int[] id = new int[200];
+    private Context context;
+    private List<MyNote> myNotes;
+    private int[] id = new int[10000];
 
-    RecyclerViewAdapter(List<Note> n, MainActivity mainActivity) {
-        this.act = mainActivity;
-        this.notes = n;
+    MyNoteRecyclerViewAdapter(List<MyNote> n, Context c) {
+        this.context = c;
+        this.myNotes = n;
     }
 
     @NonNull
@@ -34,7 +38,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int p) {
         final int position = p;
-        Note n = notes.get(position);
+        MyNote n = myNotes.get(position);
         String body = n.getBody();
         String head = n.getHead();
         id[position] = n.getId();
@@ -49,16 +53,16 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(act, AddNoteActivity.class);
+                Intent intent = new Intent(context, AddMyNoteActivity.class);
                 intent.putExtra("id", id[position]);
-                act.startActivity(intent);
+                context.startActivity(intent);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return notes.size();
+        return myNotes.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
