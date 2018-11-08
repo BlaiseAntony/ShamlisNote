@@ -1,7 +1,6 @@
 package com.qburst.blaise.shamlisnote.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,20 +10,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.qburst.blaise.shamlisnote.R;
-import com.qburst.blaise.shamlisnote.activity.AddMessNoteActivity;
-import com.qburst.blaise.shamlisnote.activity.AddMyNoteActivity;
 import com.qburst.blaise.shamlisnote.model.MessNote;
 
 import java.util.List;
 
-class MessNoteRecyclerViewAdapter extends RecyclerView.Adapter<MessNoteRecyclerViewAdapter.ViewHolder1> {
+public class MessNoteRecyclerViewAdapter extends RecyclerView.Adapter<MessNoteRecyclerViewAdapter.ViewHolder1> {
 
     private Context context;
     private List<MessNote> messNotes;
     private int[] id = new int[10000];
+    CustomListener customListener;
 
-    MessNoteRecyclerViewAdapter(List<MessNote> n, Context c) {
+    MessNoteRecyclerViewAdapter(List<MessNote> n, Context c, CustomListener customListener) {
         this.context = c;
+        this.customListener = customListener;
         this.messNotes = n;
     }
 
@@ -33,6 +32,7 @@ class MessNoteRecyclerViewAdapter extends RecyclerView.Adapter<MessNoteRecyclerV
     public ViewHolder1 onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.messnote, parent, false);
+
         return new ViewHolder1(v);
     }
 
@@ -50,9 +50,7 @@ class MessNoteRecyclerViewAdapter extends RecyclerView.Adapter<MessNoteRecyclerV
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AddMessNoteActivity.class);
-                intent.putExtra("id", id[position]);
-                context.startActivity(intent);
+                customListener.clicked(id[position]);
             }
         });
     }
@@ -75,5 +73,9 @@ class MessNoteRecyclerViewAdapter extends RecyclerView.Adapter<MessNoteRecyclerV
             price = itemView.findViewById(R.id.price);
             card = itemView.findViewById(R.id.card1);
         }
+    }
+
+    public interface CustomListener {
+        void clicked(int id);
     }
 }

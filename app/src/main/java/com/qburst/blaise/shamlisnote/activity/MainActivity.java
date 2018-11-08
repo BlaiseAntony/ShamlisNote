@@ -14,10 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.qburst.blaise.shamlisnote.R;
+import com.qburst.blaise.shamlisnote.databasehelper.MessDatabase;
 import com.qburst.blaise.shamlisnote.fragment.BackupFragment;
 import com.qburst.blaise.shamlisnote.fragment.MessFragment;
+import com.qburst.blaise.shamlisnote.fragment.MessNoteRecyclerViewAdapter;
 import com.qburst.blaise.shamlisnote.fragment.MyNoteFragment;
-import com.qburst.blaise.shamlisnote.R;
+import com.qburst.blaise.shamlisnote.model.MessNote;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,12 +32,16 @@ public class MainActivity extends AppCompatActivity
     public static final int MY_NOTE = 99;
     public static final int MESS = 100;
     private FloatingActionButton fab;
+    MessDatabase db;
+    public static boolean newEntry;
+    public static int messNotePosition;
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("noteCount", noteCount).apply();
+        editor.putInt("messNoteCount", messNoteCount).apply();
     }
 
     @Override
@@ -56,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         preferences = getSharedPreferences("note", MODE_PRIVATE);
         noteCount = preferences.getInt("noteCount", 0);
+        messNoteCount = preferences.getInt("messNoteCount", 0);
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,9 +74,8 @@ public class MainActivity extends AppCompatActivity
                             AddMyNoteActivity.class);
                     startActivity(intent);
                 } else if (fragment_id == MESS) {
-                    Intent intent = new Intent(MainActivity.this,
-                            AddMessNoteActivity.class);
-                    startActivity(intent);
+                    messFragment.setDialogBoxVisibleWithOutDeleteButton();
+                    newEntry = true;
                 }
             }
         });
@@ -83,7 +90,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         displayNotes();
         navigationView.getMenu().findItem(R.id.mynotes).setChecked(true);
-
     }
 
     @Override
@@ -94,10 +100,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    private void findFragment(){
-
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -140,8 +142,10 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
     }
 
+    private MessFragment messFragment= null;
     private void displayMessNotes() {
         MessFragment f= new MessFragment();
+        this.messFragment = f;
         getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
     }
 
@@ -151,5 +155,42 @@ public class MainActivity extends AppCompatActivity
 
     public void restore(View view) {
         Toast.makeText(this, "Functionality will be available soon", Toast.LENGTH_SHORT).show();
+    }
+
+    public void store(){
+        int id = 0;
+        if(newEntry){
+            id = messNoteCount++;
+        }
+        else{
+            id = messNotePosition;
+        }
+        String date = messFragment.getDate();
+        String item = messFragment.getItem();
+        String price = messFragment.getPrice();
+        db = new MessDatabase(this);
+        if(date.equals("") && item.equals("") && price.equals("")) {
+            Toast.makeText(this, "The fields cannot be empty",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else {
+            MessNote n = new MessNote(id, date, item, Integer.parseInt(price));
+            db.insert(n);
+            onResume();
+        }
+    }
+
+    public void storeData(View view) {
+        store();
+    }
+
+    public void deleteNote(View view) {
+        db = new MessDatabase(this);
+        db.delete(messNotePosition);
+        onResume();
+    }
+
+    public void discard(View view){
+        onResume();
     }
 }

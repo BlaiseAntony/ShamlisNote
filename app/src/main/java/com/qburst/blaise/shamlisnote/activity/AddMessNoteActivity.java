@@ -15,7 +15,7 @@ import com.qburst.blaise.shamlisnote.R;
 import com.qburst.blaise.shamlisnote.databasehelper.MessDatabase;
 import com.qburst.blaise.shamlisnote.model.MessNote;
 
-import static com.qburst.blaise.shamlisnote.activity.MainActivity.noteCount;
+import static com.qburst.blaise.shamlisnote.activity.MainActivity.messNoteCount;
 
 public class AddMessNoteActivity extends AppCompatActivity {
 
@@ -77,7 +77,7 @@ public class AddMessNoteActivity extends AppCompatActivity {
         else {
             int c = 0;
             if(id == -1) {
-                c = noteCount++;
+                c = messNoteCount++;
             }
             else {
                 c = id;
