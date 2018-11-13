@@ -11,8 +11,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.qburst.blaise.shamlisnote.databasehelper.Database;
 import com.qburst.blaise.shamlisnote.model.MyNote;
-import com.qburst.blaise.shamlisnote.databasehelper.MyNoteDatabase;
 import com.qburst.blaise.shamlisnote.R;
 
 import static com.qburst.blaise.shamlisnote.activity.MainActivity.noteCount;
@@ -24,7 +24,7 @@ public class AddMyNoteActivity extends AppCompatActivity{
     int id;
     String body;
     String heading;
-    MyNoteDatabase db;
+    Database db;
     MenuItem save;
     MenuItem edit;
     MenuItem delete;
@@ -35,7 +35,7 @@ public class AddMyNoteActivity extends AppCompatActivity{
         setContentView(R.layout.add_note_activity);
         head = findViewById(R.id.heading);
         content = findViewById(R.id.body);
-        db = new MyNoteDatabase(this);
+        db = new Database(this);
     }
 
     @Override

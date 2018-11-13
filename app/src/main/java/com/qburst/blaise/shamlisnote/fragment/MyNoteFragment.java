@@ -11,9 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.qburst.blaise.shamlisnote.model.MyNote;
-import com.qburst.blaise.shamlisnote.databasehelper.MyNoteDatabase;
 import com.qburst.blaise.shamlisnote.R;
+import com.qburst.blaise.shamlisnote.databasehelper.Database;
+import com.qburst.blaise.shamlisnote.model.MyNote;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +44,7 @@ public class MyNoteFragment extends Fragment {
         Context c = getActivity();
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(c));
-        MyNoteDatabase db = new MyNoteDatabase(c);
+        Database db = new Database(c);
         List<MyNote> myNote = db.getAllNotes();
         List<MyNote> myNotes = myNote.subList(0, myNote.size());
         Collections.reverse(myNotes);
