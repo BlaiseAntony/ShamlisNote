@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity
         String item = messFragment.getItem();
         String price = messFragment.getPrice();
         db = new Database(this);
-        if(date.equals("") && item.equals("") && price.equals("")) {
+        if(date.equals("") || item.equals("") || price.equals("")) {
             Toast.makeText(this, "The fields cannot be empty",
                     Toast.LENGTH_SHORT).show();
         }
