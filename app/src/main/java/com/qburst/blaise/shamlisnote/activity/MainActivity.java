@@ -23,8 +23,10 @@ import android.widget.Toast;
 import com.qburst.blaise.shamlisnote.R;
 import com.qburst.blaise.shamlisnote.databasehelper.Database;
 import com.qburst.blaise.shamlisnote.fragment.BackupFragment;
+import com.qburst.blaise.shamlisnote.fragment.ContactFragment;
 import com.qburst.blaise.shamlisnote.fragment.MessFragment;
 import com.qburst.blaise.shamlisnote.fragment.MyNoteFragment;
+import com.qburst.blaise.shamlisnote.fragment.SettingsFragment;
 import com.qburst.blaise.shamlisnote.model.MessNote;
 
 import java.io.File;
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity
     public static final int MY_NOTE = 99;
     public static final int MESS = 100;
     public static final int BACKUP = 101;
+    public static final int CONTACTUS = 102;
+    public static final int SETTINGS = 103;
     private FloatingActionButton fab;
     Database db;
     public static boolean newEntry;
@@ -70,6 +74,12 @@ public class MainActivity extends AppCompatActivity
         }
         else if(fragment_id == BACKUP) {
             importExport();
+        }
+        else if(fragment_id == CONTACTUS) {
+            contactUs();
+        }
+        else if(fragment_id == SETTINGS) {
+            settings();
         }
         super.onResume();
     }
@@ -158,10 +168,12 @@ public class MainActivity extends AppCompatActivity
             importExport();
         }
         else if (id == R.id.settings) {
-
+            fab.setVisibility(View.INVISIBLE);
+            settings();
         }
         else if (id == R.id.contactus) {
-
+            fab.setVisibility(View.INVISIBLE);
+            contactUs();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -169,10 +181,22 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private void settings() {
+        setActionBarTitle("Settings");
+        SettingsFragment f = new SettingsFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
+    }
+
+    private void contactUs() {
+        setActionBarTitle("Contact Us");
+        ContactFragment f = new ContactFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
+    }
+
     private void displayNotes() {
         setActionBarTitle("My Notes");
         MyNoteFragment f = new MyNoteFragment();
-          getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
     }
 
     private void importExport() {
@@ -207,10 +231,12 @@ public class MainActivity extends AppCompatActivity
             }
             output.flush();
             output.close();
-            fis.close();
+            fis.close();fis.close();
+            Toast.makeText(this,"Successfully backed up the data",Toast.LENGTH_SHORT).show();
         }
         catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(this,"Backup failed",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -233,9 +259,11 @@ public class MainActivity extends AppCompatActivity
             output.flush();
             output.close();
             fis.close();
+            Toast.makeText(this,"Successfully restored the data",Toast.LENGTH_SHORT).show();
         }
         catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(this,"Restore failed",Toast.LENGTH_SHORT).show();
         }
         db = new Database(this);
         db.findCount();
