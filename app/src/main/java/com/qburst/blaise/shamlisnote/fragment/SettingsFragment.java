@@ -28,13 +28,4 @@ public class SettingsFragment extends Fragment {
         super.onAttach(context);
         fragment_id = SETTINGS;
     }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Context c = getContext();
-        Database db = new Database(c);
-        int sum = db.getSum();
-        TextView textView = view.findViewById(R.id.textView);
-        textView.setText("mess Sum = "+ sum);
-    }
 }

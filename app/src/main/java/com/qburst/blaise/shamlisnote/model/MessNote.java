@@ -2,20 +2,20 @@ package com.qburst.blaise.shamlisnote.model;
 
 public class MessNote {
 
-    private String date;
     private String item;
     private int id;
     private int price;
+    private int year;
+    private int month;
+    private int day;
 
-    public MessNote(int id, String date, String item, int price) {
+    public MessNote(int id, String item, int price, int year, int month, int day) {
         this.id = id;
-        this.date = date;
         this.item = item;
         this.price = price;
-    }
-
-    public String getDate() {
-        return date;
+        this.year = year;
+        this.month = month;
+        this.day = day;
     }
 
     public String getItem() {
@@ -28,5 +28,17 @@ public class MessNote {
 
     public int getPrice() {
         return price;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
     }
 }

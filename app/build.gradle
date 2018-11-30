@@ -6,7 +6,7 @@ android {
         applicationId "com.qburst.blaise.shamlisnote"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 5
+        versionCode 6
         versionName "3.1"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

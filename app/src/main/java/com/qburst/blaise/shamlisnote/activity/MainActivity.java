@@ -6,16 +6,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -33,9 +30,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.Calendar;
 import java.util.List;
 
-import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity
@@ -53,10 +50,16 @@ public class MainActivity extends AppCompatActivity
     public static final int BACKUP = 101;
     public static final int CONTACTUS = 102;
     public static final int SETTINGS = 103;
+    public static Calendar calendar;
     private FloatingActionButton fab;
     Database db;
     public static boolean newEntry;
     public static int messNotePosition;
+    public static int day;
+    public static int month;
+    public static int year;
+    public static int monthforSpinner;
+
 
     @Override
     protected void onStop() {
@@ -93,6 +96,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        calendar = Calendar.getInstance();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -109,6 +113,7 @@ public class MainActivity extends AppCompatActivity
                             AddMyNoteActivity.class);
                     startActivity(intent);
                 } else if (fragment_id == MESS) {
+                    calendar = Calendar.getInstance();
                     messFragment.setDialogBoxVisibleWithOutDeleteButton();
                     newEntry = true;
                 }
@@ -170,6 +175,7 @@ public class MainActivity extends AppCompatActivity
             displayNotes();
         }
         else if (id == R.id.messnotes) {
+            monthforSpinner = calendar.get(Calendar.MONTH);
             displayMessNotes();
         }
         else if (id == R.id.importexport) {
@@ -297,7 +303,7 @@ public class MainActivity extends AppCompatActivity
                     Toast.LENGTH_SHORT).show();
         }
         else {
-            MessNote n = new MessNote(id, date, item, Integer.parseInt(price));
+            MessNote n = new MessNote(id, item, Integer.parseInt(price), year, month, day);
             db.insertMess(n);
             onResume();
         }

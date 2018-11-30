@@ -40,7 +40,7 @@ public class MessNoteRecyclerViewAdapter extends RecyclerView.Adapter<MessNoteRe
     public void onBindViewHolder(@NonNull ViewHolder1 holder, int p) {
         final int position = p;
         MessNote n = messNotes.get(position);
-        String date = n.getDate();
+        String date = n.getDay()+"/"+n.getMonth()+"/"+n.getYear();
         String item = n.getItem();
         String price = Integer.toString(n.getPrice());
         id[position] = n.getId();

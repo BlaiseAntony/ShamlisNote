@@ -22,20 +22,8 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table if not exists mess(id int primary key, date varchar(8), item varchar(20), price int);");
+        db.execSQL("create table if not exists mess(id int primary key, year int, month int, day int, item varchar(20), price int);");
         db.execSQL("create table if not exists note(id int primary key, head varchar(20), body varchar(1000));");
-    }
-
-    public int getSum() {
-        SQLiteDatabase db = getReadableDatabase();
-        int sum = 0;
-        Cursor cursor = db.rawQuery("select price from mess",null);
-        if(cursor.moveToFirst()) {
-            do {
-                sum += cursor.getInt(cursor.getColumnIndex("price"));
-            } while (cursor.moveToNext());
-        }
-        return sum;
     }
 
     @Override
@@ -44,7 +32,7 @@ public class Database extends SQLiteOpenHelper {
 
     public void insertMess(MessNote m) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("insert or replace into mess values("+ m.getId()+",'"+ m.getDate()+"','"+ m.getItem()+"','"+ m.getPrice()+"')");
+        db.execSQL("insert or replace into mess values("+ m.getId()+","+m.getYear()+","+m.getMonth()+","+m.getDay()+",'"+ m.getItem()+"',"+ m.getPrice()+")");
     }
 
     public void deleteMess(int id) {
@@ -52,18 +40,20 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("delete from mess where id="+id);
     }
 
-    public List<MessNote> getAllMessNotes() {
+    public List<MessNote> getAllMessNotes(int month, int year) {
         SQLiteDatabase db = getReadableDatabase();
         List<MessNote> messNotes = new ArrayList<>();
         MessNote messNote;
-        String query = "select * from mess";
+        String query = "select * from mess where month = "+month+" and year = "+year;
         Cursor cursor = db.rawQuery(query, null);
         if(cursor.moveToFirst()) {
             do {
                 messNote = new MessNote(cursor.getInt(cursor.getColumnIndex("id")),
-                        cursor.getString(cursor.getColumnIndex("date")),
                         cursor.getString(cursor.getColumnIndex("item")),
-                        cursor.getInt(cursor.getColumnIndex("price")));
+                        cursor.getInt(cursor.getColumnIndex("price")),
+                        cursor.getInt(cursor.getColumnIndex("year")),
+                        cursor.getInt(cursor.getColumnIndex("month")),
+                        cursor.getInt(cursor.getColumnIndex("day")));
                 messNotes.add(messNote);
             } while (cursor.moveToNext());
         }
@@ -76,9 +66,11 @@ public class Database extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("select * from mess where id="+id,null);
         if(cursor.moveToFirst()){
             return new MessNote(cursor.getInt(cursor.getColumnIndex("id")),
-                    cursor.getString(cursor.getColumnIndex("date")),
                     cursor.getString(cursor.getColumnIndex("item")),
-                    cursor.getInt(cursor.getColumnIndex("price")));
+                    cursor.getInt(cursor.getColumnIndex("price")),
+                    cursor.getInt(cursor.getColumnIndex("year")),
+                    cursor.getInt(cursor.getColumnIndex("month")),
+                    cursor.getInt(cursor.getColumnIndex("day")));
         }
         else {
             return null;
