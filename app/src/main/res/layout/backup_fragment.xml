@@ -8,7 +8,7 @@
 
     <Button
         android:id="@+id/backup"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:background="@drawable/my_button"
         android:onClick="backup"
@@ -23,7 +23,7 @@
 
     <Button
         android:id="@+id/restore"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:background="@drawable/my_button"
         android:onClick="restore"

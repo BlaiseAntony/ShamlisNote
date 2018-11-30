@@ -26,6 +26,18 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("create table if not exists note(id int primary key, head varchar(20), body varchar(1000));");
     }
 
+    public int getSum() {
+        SQLiteDatabase db = getReadableDatabase();
+        int sum = 0;
+        Cursor cursor = db.rawQuery("select price from mess",null);
+        if(cursor.moveToFirst()) {
+            do {
+                sum += cursor.getInt(cursor.getColumnIndex("price"));
+            } while (cursor.moveToNext());
+        }
+        return sum;
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
@@ -123,6 +135,5 @@ public class Database extends SQLiteOpenHelper {
         cursor1.moveToFirst();
         noteCount = cursor1.getInt(cursor1.getColumnIndex("max"));
         cursor1.close();
-
     }
 }

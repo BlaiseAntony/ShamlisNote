@@ -8,8 +8,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.qburst.blaise.shamlisnote.R;
+import com.qburst.blaise.shamlisnote.databasehelper.Database;
 
 import static com.qburst.blaise.shamlisnote.activity.MainActivity.SETTINGS;
 import static com.qburst.blaise.shamlisnote.activity.MainActivity.fragment_id;
@@ -25,5 +27,14 @@ public class SettingsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         fragment_id = SETTINGS;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Context c = getContext();
+        Database db = new Database(c);
+        int sum = db.getSum();
+        TextView textView = view.findViewById(R.id.textView);
+        textView.setText("mess Sum = "+ sum);
     }
 }

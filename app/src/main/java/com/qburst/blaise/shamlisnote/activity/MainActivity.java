@@ -42,10 +42,12 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         EasyPermissions.PermissionCallbacks {
 
+    public static boolean isDialogueBox = false;
     public static int noteCount;
     public static int messNoteCount;
     SharedPreferences preferences;
     public static int fragment_id;
+    public static int messOrNote;
     public static final int MY_NOTE = 99;
     public static final int MESS = 100;
     public static final int BACKUP = 101;
@@ -144,7 +146,16 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else if (isDialogueBox) {
+            isDialogueBox = false;
+            onResume();
+        }
+        else if (fragment_id == SETTINGS || fragment_id == BACKUP || fragment_id == CONTACTUS) {
+            fragment_id = messOrNote;
+            onResume();
+        }
+        else {
             super.onBackPressed();
         }
     }
@@ -156,23 +167,18 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.mynotes) {
-            fab.setVisibility(View.VISIBLE);
             displayNotes();
         }
         else if (id == R.id.messnotes) {
-            fab.setVisibility(View.VISIBLE);
             displayMessNotes();
         }
         else if (id == R.id.importexport) {
-            fab.setVisibility(View.INVISIBLE);
             importExport();
         }
         else if (id == R.id.settings) {
-            fab.setVisibility(View.INVISIBLE);
             settings();
         }
         else if (id == R.id.contactus) {
-            fab.setVisibility(View.INVISIBLE);
             contactUs();
         }
 
@@ -182,24 +188,28 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void settings() {
+        fab.setVisibility(View.INVISIBLE);
         setActionBarTitle("Settings");
         SettingsFragment f = new SettingsFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
     }
 
     private void contactUs() {
+        fab.setVisibility(View.INVISIBLE);
         setActionBarTitle("Contact Us");
         ContactFragment f = new ContactFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
     }
 
     private void displayNotes() {
+        fab.setVisibility(View.VISIBLE);
         setActionBarTitle("My Notes");
         MyNoteFragment f = new MyNoteFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
     }
 
     private void importExport() {
+        fab.setVisibility(View.INVISIBLE);
         setActionBarTitle("Backup and Restore");
         BackupFragment f= new BackupFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container,f).commit();
@@ -207,6 +217,7 @@ public class MainActivity extends AppCompatActivity
 
     private MessFragment messFragment= null;
     private void displayMessNotes() {
+        fab.setVisibility(View.VISIBLE);
         setActionBarTitle("Mess Notes");
         MessFragment f= new MessFragment();
         this.messFragment = f;
@@ -293,16 +304,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void storeData(View view) {
+        isDialogueBox = false;
         store();
     }
 
     public void deleteNote(View view) {
         db = new Database(this);
         db.deleteMess(messNotePosition);
+        isDialogueBox = false;
         onResume();
     }
 
     public void discard(View view){
+        isDialogueBox = false;
         onResume();
     }
 

@@ -36,6 +36,16 @@ public class AddMyNoteActivity extends AppCompatActivity{
         head = findViewById(R.id.heading);
         content = findViewById(R.id.body);
         db = new Database(this);
+        this.setTitle("Add Note");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -81,11 +91,6 @@ public class AddMyNoteActivity extends AppCompatActivity{
             db.insert(n);
             onBackPressed();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     public void deleteNote(MenuItem item) {

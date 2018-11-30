@@ -20,6 +20,7 @@ import java.util.List;
 
 import static com.qburst.blaise.shamlisnote.activity.MainActivity.MY_NOTE;
 import static com.qburst.blaise.shamlisnote.activity.MainActivity.fragment_id;
+import static com.qburst.blaise.shamlisnote.activity.MainActivity.messOrNote;
 
 public class MyNoteFragment extends Fragment {
 
@@ -27,6 +28,7 @@ public class MyNoteFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         fragment_id = MY_NOTE;
+        messOrNote = MY_NOTE;
     }
 
     @Nullable
