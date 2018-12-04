@@ -16,10 +16,11 @@
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="150dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
             android:layout_height="wrap_content"
-            android:entries="@array/months"/>
+            android:entries="@array/months"
+            android:spinnerMode="dialog"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView5"

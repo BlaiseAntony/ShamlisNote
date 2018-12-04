@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +109,7 @@ public class MessFragment extends Fragment implements MessNoteRecyclerViewAdapte
         spinner.setSelection(monthforSpinner);
         recyclerView.setLayoutManager(new LinearLayoutManager(c));
         Database db = new Database(c);
+        Log.e("hi2", String.valueOf(monthforSpinner));
         List<MessNote> messNote = db.getAllMessNotes(monthforSpinner +1,year);
         List<MessNote> messNotes = messNote.subList(0,messNote.size());
         for(int i=0;i<messNotes.size();i++){

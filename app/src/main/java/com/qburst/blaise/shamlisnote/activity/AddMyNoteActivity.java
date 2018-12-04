@@ -65,8 +65,8 @@ public class AddMyNoteActivity extends AppCompatActivity{
                 head.setText(heading);
                 content.setText(body);
             }
-            head.setInputType(InputType.TYPE_NULL);
-            content.setInputType(InputType.TYPE_NULL);
+            head.setEnabled(false);
+            content.setEnabled(false);
             save.setVisible(false);
             edit.setVisible(true);
             delete.setVisible(true);
@@ -99,8 +99,8 @@ public class AddMyNoteActivity extends AppCompatActivity{
     }
 
     public void editNote(MenuItem item) {
-        head.setInputType(InputType.TYPE_CLASS_TEXT);
-        content.setInputType(InputType.TYPE_CLASS_TEXT);
+        head.setEnabled(true);
+        content.setEnabled(true);
         save.setVisible(true);
         delete.setVisible(false);
         edit.setVisible(false);
