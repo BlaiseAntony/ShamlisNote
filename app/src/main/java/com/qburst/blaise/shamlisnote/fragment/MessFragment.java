@@ -68,7 +68,7 @@ public class MessFragment extends Fragment implements MessNoteRecyclerViewAdapte
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         spinner = view.findViewById(R.id.spinner);
-        total = view.findViewById(R.id.textView5);
+        total = view.findViewById(R.id.textView6);
         header = view.findViewById(R.id.header);
         recyclerView = view.findViewById(R.id.recyclerview);
         date = view.findViewById(R.id.date);
@@ -115,7 +115,7 @@ public class MessFragment extends Fragment implements MessNoteRecyclerViewAdapte
         for(int i=0;i<messNotes.size();i++){
             totalSpent+=messNotes.get(i).getPrice();
         }
-        total.setText("Total spent = "+totalSpent);
+        total.setText(""+totalSpent);
         Collections.reverse(messNotes);
         MessNoteRecyclerViewAdapter adapter = new MessNoteRecyclerViewAdapter(messNotes,c,this);
         recyclerView.setAdapter(adapter);

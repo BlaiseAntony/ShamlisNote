@@ -1,8 +1,10 @@
 package com.qburst.blaise.shamlisnote.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.Menu;
@@ -94,8 +96,22 @@ public class AddMyNoteActivity extends AppCompatActivity{
     }
 
     public void deleteNote(MenuItem item) {
-        db.delete(id);
-        onBackPressed();
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        db.delete(id);
+                        onBackPressed();
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        onBackPressed();
+                }
+            }
+        };
+        AlertDialog.Builder ab = new AlertDialog.Builder(this);
+        ab.setMessage("Are you sure to delete?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     public void editNote(MenuItem item) {

@@ -43,7 +43,7 @@ class MyNoteRecyclerViewAdapter extends RecyclerView.Adapter<MyNoteRecyclerViewA
         String head = n.getHead();
         id[position] = n.getId();
         holder.head.setText(head);
-        if (body.length()>101) {
+        if (body.length()>51) {
             String str = body.substring(0,100)+"...";
             holder.content.setText(str);
         }
